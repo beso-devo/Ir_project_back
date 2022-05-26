@@ -39,7 +39,7 @@ def get_lemmatization_tokens_ci():
     for doc in documents:
         lemmas_list = []
         for word in doc.stemmed_list:
-            lemmas_list.append(word_lemmatizer.lemmatize(word))
+            lemmas_list.append(word_lemmatizer.lemmatize(word, 'v'))
         doc.set_lemmas_list(lemmas_list)
         lemmas_list = []
     ci.document.Document.display(documents[0])
@@ -66,4 +66,4 @@ def get_lemmatization_tokens_ci():
     # ci.document.Document.display(documents[0])
 
 
-get_lemmatization_tokens_ci()
+# get_lemmatization_tokens_ci()
