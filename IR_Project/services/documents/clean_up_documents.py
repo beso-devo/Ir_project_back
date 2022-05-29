@@ -1,9 +1,5 @@
-import IR_Project.utils.parser_ci as ci
-import nltk
-from nltk import ngrams
+import IR_Project.utils.document.parser_ci as ci
 from nltk.stem import PorterStemmer
-from nltk.stem import LancasterStemmer
-from nltk.tokenize import sent_tokenize, word_tokenize
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords

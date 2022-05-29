@@ -6,7 +6,7 @@ import re
 
 def parse_ci_all():
     documents_objects = []
-    ci_file_all = open("H:\PyCharm Projects\FirstOne\datasets\CISI\CISI.txt", "r")
+    ci_file_all = open("/datasets/CISI/CISI.txt", "r")
     content = ci_file_all.read()
     documents = content.split(".I ")
     for doc in documents:

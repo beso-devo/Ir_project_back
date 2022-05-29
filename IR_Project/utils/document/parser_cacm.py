@@ -4,7 +4,7 @@ import re
 
 def parse_ca_cm_all():
     documents_objects = []
-    ca_cm_file_all = open("H:\PyCharm Projects\FirstOne\datasets\cacm\cacm.txt", "r")
+    ca_cm_file_all = open("/datasets/cacm/cacm.txt", "r")
     content = ca_cm_file_all.read()
     documents = content.split(".I ")
     for doc in documents:
