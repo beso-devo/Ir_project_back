@@ -3,17 +3,25 @@ class Document:
     title = ""
     author = ""
     words = ""
+    references_text = ""
+    references_list = []
+    reference_rank = -1
     tokens = []
     stemmed_list = []
     lemmas = []
     filtered_list = []
     tf_idf = 0.0
 
-    def __init__(self, document_id, title, author, words, tokens, stemmed_list, lemmas, filtered_list, tf_idf):
+    def __init__(self, document_id, title, author, words, references_text, references_list, reference_rank,tokens, stemmed_list,
+                 lemmas, filtered_list,
+                 tf_idf):
         self.document_id = document_id
         self.title = title
         self.author = author
         self.words = words
+        self.references_text = references_text
+        self.references_list = references_list
+        self.reference_rank = reference_rank
         self.tokens = tokens
         self.stemmed_list = stemmed_list
         self.lemmas = lemmas
@@ -44,7 +52,8 @@ class Document:
             'title': self.title,
             'author': self.author,
             'text': self.words,
-            'tf_idf': self.tf_idf
+            'tf_idf': self.tf_idf,
+            'reference_rank': self.reference_rank
         }
 
     def display(self):

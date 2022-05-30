@@ -27,12 +27,17 @@ def get_document_from_ci_text(document_str):
             find_between(document_str, ".T", ".A").strip(),
             find_between(document_str, ".A", ".W").strip(),
             find_between(document_str, ".W", ".X").strip(),
+            get_from_to_last(document_str, ".X"),
+            [],
+            -1,
             [],
             [],
             [],
             [],
             0.0
         )
+        for line in doc.references_text.strip().splitlines():
+            doc.references_list.append(convert_list_string_to_int(re.split('\s+', line)))
         # document.Document.display(doc)
         return doc
 
@@ -45,4 +50,20 @@ def find_between(s, first, last):
     except ValueError:
         return ""
 
-# parse_ci_all()
+
+def get_from_to_last(s, from_str):
+    try:
+        start = s.index(from_str) + len(from_str)
+        return s[start:]
+    except ValueError:
+        return ""
+
+
+def convert_list_string_to_int(list_test):
+    list_test = list_test[:-1]
+    for i in range(0, len(list_test)):
+        list_test[i] = int(list_test[i])
+    return list_test
+
+
+parse_ci_all()
