@@ -7,8 +7,9 @@ class Document:
     stemmed_list = []
     lemmas = []
     filtered_list = []
+    tf_idf = 0.0
 
-    def __init__(self, document_id, title, author, words, tokens, stemmed_list, lemmas, filtered_list):
+    def __init__(self, document_id, title, author, words, tokens, stemmed_list, lemmas, filtered_list, tf_idf):
         self.document_id = document_id
         self.title = title
         self.author = author
@@ -17,6 +18,7 @@ class Document:
         self.stemmed_list = stemmed_list
         self.lemmas = lemmas
         self.filtered_list = filtered_list
+        self.tf_idf = tf_idf
 
     def set_tokens(self, tokens):
         self.tokens = tokens
@@ -30,8 +32,20 @@ class Document:
     def set_filtered_list(self, filtered_list):
         self.filtered_list = filtered_list
 
+    def set_tf_idf(self, tf_idf):
+        self.tf_idf = tf_idf
+
     def get_words(self):
         return self.words
+
+    def to_json(self):
+        return {
+            'document_id': self.document_id,
+            'title': self.title,
+            'author': self.author,
+            'text': self.words,
+            'tf_idf': self.tf_idf
+        }
 
     def display(self):
         print("document_id = " + str(self.document_id))
@@ -43,4 +57,4 @@ class Document:
         print("lemmas = " + str(self.lemmas))
         print("filtered_list = " + str(self.filtered_list))
 
-
+# ipynb

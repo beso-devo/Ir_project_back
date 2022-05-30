@@ -2,6 +2,7 @@ import IR_Project.models.query as query_cisi
 
 
 def parse_ci_si_query_all():
+    print("Now parse_ci_si_query_all...")
     documents_objects = []
     ci_file_all = open("H:\PyCharm Projects\FirstOne\datasets\cisi.txt", "r")
     content = ci_file_all.read()
@@ -14,6 +15,7 @@ def parse_ci_si_query_all():
 
     print(documents_objects)
     ci_file_all.close()
+    return documents_objects
 
 
 def get_document_from_ci_text(document_str):
@@ -23,7 +25,7 @@ def get_document_from_ci_text(document_str):
             int(document_str.splitlines()[0]),
             get_from_to_last(document_str, ".W").strip(),
         )
-        query_cisi.Query.display(doc)
+        # query_cisi.Query.display(doc)
         return doc
 
 

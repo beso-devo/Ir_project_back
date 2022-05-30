@@ -5,8 +5,9 @@ import re
 # cos similarity
 
 def parse_ci_all():
+    print("Now parse_ci_all...")
     documents_objects = []
-    ci_file_all = open("/datasets/CISI/CISI.txt", "r")
+    ci_file_all = open("H:\PyCharm Projects\FirstOne\datasets\CISI\CISI.txt", "r")
     content = ci_file_all.read()
     documents = content.split(".I ")
     for doc in documents:
@@ -15,6 +16,7 @@ def parse_ci_all():
         if doc_obj is not None:
             documents_objects.append(doc_obj)
     ci_file_all.close()
+    print("----> length = ", len(documents_objects))
     return documents_objects
 
 
@@ -28,7 +30,8 @@ def get_document_from_ci_text(document_str):
             [],
             [],
             [],
-            []
+            [],
+            0.0
         )
         # document.Document.display(doc)
         return doc

@@ -3,14 +3,17 @@ import re
 
 
 def parse_ca_cm_all():
+    print("Now parse_ca_cm_all...")
     documents_objects = []
-    ca_cm_file_all = open("/datasets/cacm/cacm.txt", "r")
+    ca_cm_file_all = open("H:\PyCharm Projects\FirstOne\datasets\cacm\cacm.txt", "r")
     content = ca_cm_file_all.read()
     documents = content.split(".I ")
     for doc in documents:
-        print("------->")
+        # print("------->")
         documents_objects.append(get_document_from_ca_cm_text(doc))
     ca_cm_file_all.close()
+    print("----> cacm length = ", len(documents_objects))
+    return documents_objects
 
 
 def get_document_from_ca_cm_text(document_str):
@@ -23,7 +26,7 @@ def get_document_from_ca_cm_text(document_str):
             find_between(document_str, ".N", ".X").strip(),
             get_from_to_last(document_str, ".X")
         )
-        document_ca_cm.DocumentCaCm.display(doc)
+        # document_ca_cm.DocumentCaCm.display(doc)
         return doc
 
 
@@ -42,6 +45,5 @@ def get_from_to_last(s, from_str):
         return s[start:]
     except ValueError:
         return ""
-
 
 # parse_ca_cm_all()

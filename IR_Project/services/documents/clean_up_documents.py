@@ -1,4 +1,4 @@
-import IR_Project.utils.document.parser_ci as ci
+import IR_Project.utils.document.parser_ci as ci_document
 from nltk.stem import PorterStemmer
 import nltk
 from nltk.stem import WordNetLemmatizer
@@ -8,17 +8,17 @@ import IR_Project.models.document as document
 
 def set_tokens_to_documents_ci():
     documents = []
-    documents = ci.parse_ci_all()
+    documents = ci_document.parse_ci_all()
     # res = list(filter(None, documents))
     print(document.Document.display(documents[0]))
     for doc in documents:
         tokens = nltk.word_tokenize(doc.words)
         doc.set_tokens(tokens)
-    ci.document.Document.display(documents[0])
+    ci_document.document.Document.display(documents[0])
     return documents
 
 
-def get_lemmatization_tokens_ci():
+def get_lemmatization_tokens_ci(text):
     documents = set_tokens_to_documents_ci()
     # Stemming
     p_stemmer = PorterStemmer()
@@ -28,7 +28,7 @@ def get_lemmatization_tokens_ci():
             nltk_stemmed_list.append(p_stemmer.stem(word))
         doc.set_stemmed_list(nltk_stemmed_list)
         nltk_stemmed_list = []
-    ci.document.Document.display(documents[0])
+    ci_document.document.Document.display(documents[0])
 
     # Lemmatization
     word_lemmatizer = WordNetLemmatizer()
@@ -38,7 +38,7 @@ def get_lemmatization_tokens_ci():
             lemmas_list.append(word_lemmatizer.lemmatize(word, 'v'))
         doc.set_lemmas_list(lemmas_list)
         lemmas_list = []
-    ci.document.Document.display(documents[0])
+    ci_document.document.Document.display(documents[0])
 
     # Filter stopword
     nltk_stop_words = set(stopwords.words("english"))
@@ -51,7 +51,7 @@ def get_lemmatization_tokens_ci():
                 filtered_sentence.append(w)
         doc.set_filtered_list(filtered_sentence)
 
-    ci.document.Document.display(documents[0])
+    ci_document.document.Document.display(documents[0])
 
     # # Removing Punctuation
     # for doc in documents:

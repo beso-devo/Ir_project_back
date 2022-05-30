@@ -13,8 +13,8 @@ def correct_sentence_spelling(sentence):
     print(result)
 
 
-def auto_correcting_query():
-    incorrect_words = nltk.word_tokenize("how to extract irreguslar verbs with nltk pythoon")
+def auto_correcting_query(sentence):
+    incorrect_words = nltk.word_tokenize(sentence)
     # incorrect_words = ['happpy', 'azmaing', 'intelliengt']
     correct_words = words.words()
     outcomes = []
@@ -29,6 +29,6 @@ def auto_correcting_query():
         result = result + i + " "
     print("outcomes: ", outcomes)
     print("result: ", result)
+    return outcomes
 
-
-auto_correcting_query()
+# auto_correcting_query("sentence")
