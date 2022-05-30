@@ -8,6 +8,7 @@ from flask import Flask, request, jsonify
 from flask import Blueprint, render_template, session, abort
 import IR_Project.services.documents.cos_similarity as cos_sim
 import IR_Project.models.document as document
+import IR_Project.models.document_cacm as document_ca_cm
 
 # import IR_Project.app as main_app_stuff
 import IR_Project.API.variables.lists as lists
@@ -34,29 +35,52 @@ def search():
                 "code": 415
             })
         for i in range(int(count.strip())):
-            cos_value = 0.0
-            text = ""
-            text = lists.documents_ci[i].words
-            cos_value = cos_sim.cosine_sim(
-                text, sentence
-            )
+            # cos_value = 0.0
+            # text = ""
+            # text = lists.documents_ci[i].words
+            # cos_value = cos_sim.cosine_sim(
+            #     text, sentence
+            # )
             lists.documents_ci[i].set_tf_idf(
-                cos_value
+                cos_sim.cosine_sim(
+                    lists.documents_ci[i].words, sentence
+                )
             )
-            print(i, ": tf_idf = ", lists.documents_ci[i].tf_idf)
+            # print(i, ": tf_idf = ", lists.documents_ci[i].tf_idf)
         lists.documents_ci.sort(key=lambda doc: doc.tf_idf, reverse=True)
         result = []
         for doc in lists.documents_ci:
-            print("-------> tf_idf = ", doc.tf_idf)
             if doc.tf_idf != 0.0:
+                # print("-------> tf_idf = ", doc.tf_idf)
                 result.append(doc.to_json())
+
         return jsonify({
-            "docs": result
+            "docs": result,
+            "count": len(result)
         })
 
     if dataset_type.strip() == "2":
-        print("CACM")
-    # print(len(lists.documents_ca_cm))
+        if int(count.strip()) > 3204:
+            return jsonify({
+                "error": "Out of index!",
+                "code": 415
+            })
+        for i in range(int(count.strip())):
+            lists.documents_ca_cm[i].tf_idf = cos_sim.cosine_sim(
+                "", sentence
+            )
+        lists.documents_ca_cm.sort(key=lambda doc: doc.tf_idf, reverse=True)
+        result = []
+        for doc in lists.documents_ca_cm:
+            if doc.tf_idf != 0.0:
+                result.append(doc.to_json())
+
+        return jsonify({
+            "docs": result,
+            "count": len(result)
+        })
+
     return jsonify({
-        "length": len(lists.documents_ca_cm)
+        "error": "No dataset with this type (" + dataset_type + ")!",
+        "code": 404
     })
