@@ -32,7 +32,7 @@ def get_document_from_ca_cm_text(document_str):
             find_between(document_str, ".N", ".X").strip(),
             get_from_to_last(document_str, ".X"),
             [],
-            [],
+            -1,
             0.0
         )
         # document_ca_cm.DocumentCaCm.display(doc)

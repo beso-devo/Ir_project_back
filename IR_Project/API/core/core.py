@@ -114,7 +114,7 @@ def get_document_references_ca_cm_dataset():
     })
 
 
-@app.route('/get_document_references', methods=['GET'])
+@app.route('/get_document_references_ci_si_dataset', methods=['GET'])
 def get_document_references_ci_si_dataset():
     query_parameters = request.args
     document_id = query_parameters['document_id']
