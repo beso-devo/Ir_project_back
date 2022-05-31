@@ -9,21 +9,22 @@ def parse_ci_si_query_all():
     documents = content.split(".I ")
     for doc in documents:
         # print("------->")
-        doc_obj = get_document_from_ci_text(doc)
+        doc_obj = get_query_from_ci_text(doc)
         if doc_obj is not None:
             documents_objects.append(doc_obj)
 
-    print(documents_objects)
+    # print(documents_objects)
     ci_file_all.close()
     return documents_objects
 
 
-def get_document_from_ci_text(document_str):
-    if document_str != "":
-        print(document_str)
+def get_query_from_ci_text(query_str):
+    if query_str != "":
+        # print(query_str)
         doc = query_cisi.Query(
-            int(document_str.splitlines()[0]),
-            get_from_to_last(document_str, ".W").strip(),
+            int(query_str.splitlines()[0]),
+            get_from_to_last(query_str, ".W").strip(),
+            get_relevant_document_from_result_file(int(query_str.splitlines()[0]))
         )
         # query_cisi.Query.display(doc)
         return doc
@@ -37,4 +38,8 @@ def get_from_to_last(s, from_str):
         return ""
 
 
-parse_ci_si_query_all()
+def get_relevant_document_from_result_file(query_id):
+    return []
+
+
+# parse_ci_si_query_all()
