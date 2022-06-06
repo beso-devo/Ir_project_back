@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, session, abort
 import IR_Project.services.documents.cos_similarity as cos_sim
 import IR_Project.API.variables.lists as lists
 import IR_Project.models.document_reference as document_reference
-import IR_Project.models.document_cacm as document_ca_cm
+import IR_Project.utils.recall_precision as func_stuff
 
 app = Blueprint('core', __name__)
 
@@ -151,20 +151,89 @@ def get_document_references_ci_si_dataset():
 
 @app.route('/get_recall_precision_ci', methods=['GET'])
 def get_recall_precision_ci():
-    if not lists.results_ci:
-        # lists.queries_ci = lists.ci_query.parse_ci_si_query_all()
-        lists.results_ci = lists.ci_result.parse_ci_result_file()
+    # if not lists.results_ci:
+    #     # lists.queries_ci = lists.ci_query.parse_ci_si_query_all()
+    #     lists.results_ci = lists.ci_result.parse_ci_result_file()
+    #
+    # for query in lists.queries_ci:
+    #     list_ids = []
+    #     for res in lists.results_ci:
+    #         if res[0] == query.query_id:
+    #             list_ids.append(res[1])
+    #     query.documents_relevant = list_ids
+    #     # print("query_id =", query.query_id, " ", "lists_ids = ", list_ids)
 
+    for i in range(35):
+        results = get_first_ten_ci_docs(lists.queries_ci[i])
+        retrieved_docs = count_relevant_documents(results, lists.queries_ci[i])
+        lists.queries_ci[i].query_precision = func_stuff.precision(retrieved_docs, 500)
+        if retrieved_docs == 0 or len(lists.queries_ci[i].documents_relevant) == 0:
+            lists.queries_ci[i].query_re_call = 0.0
+        else:
+            lists.queries_ci[i].query_re_call = func_stuff.recall(retrieved_docs,
+                                                                  len(lists.queries_ci[i].documents_relevant))
+
+    result = []
     for query in lists.queries_ci:
-        list_ids = []
-        for res in lists.results_ci:
-            if res[0] == query.query_id:
-                list_ids.append(res[1])
-        query.documents_relevant = list_ids
-        # print("query_id =", query.query_id, " ", "lists_ids = ", list_ids)
-        list_ids = []
+        result.append(query.to_json())
 
     return jsonify({
-        "docs": [],
-        "count": 0
+        "queries": result,
+        "count": len(result),
+        "MAP": get_mean_average_precision(result),
+        "MRR": get_mean_reciprocal_rank(result),
     })
+
+
+def get_first_ten_ci_docs(query):
+    docs = []
+    # query.display()
+    for i in range(1459):
+        cos_sim_value = 0.0
+        cos_sim_value = cos_sim.cosine_sim(
+            lists.documents_ci[i].words, query.query_text
+        )
+        if cos_sim_value != 0.0:
+            lists.documents_ci[i].set_tf_idf(
+                cos_sim_value
+            )
+            docs.append(lists.documents_ci[i])
+
+    if len(docs) > 500:
+        return docs[0:500]
+    return docs
+
+
+def count_relevant_documents(results, query):
+    counter = 0.0
+    for document_relevant_id in query.documents_relevant:
+        if check_document_in_relevant_list(document_relevant_id, results):
+            counter = counter + 1
+    return counter
+
+
+def check_document_in_relevant_list(document_relevant_id, results):
+    for result in results:
+        if result.document_id == document_relevant_id:
+            return True
+    return False
+
+
+def get_mean_average_precision(result):
+    total = 0.0
+    counter = 0
+    for i in range(56):
+        if lists.queries_ci[i].query_precision != -1.0:
+            total = total + lists.queries_ci[i].query_precision
+            counter = counter + 1
+    return total / counter
+
+
+def get_mean_reciprocal_rank(result):
+    total = 0.0
+    counter = 0
+    for i in range(56):
+        if lists.queries_ci[i].query_re_call != -1.0:
+            total = total + lists.queries_ci[i].query_re_call
+            counter = counter + 1
+    return total / counter

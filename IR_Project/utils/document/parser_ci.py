@@ -1,5 +1,6 @@
 import IR_Project.models.document as document
 import re
+import IR_Project.services.documents.calculate_tf_idf as calculate_tf_idf
 
 
 # cos similarity
@@ -34,7 +35,9 @@ def get_document_from_ci_text(document_str):
             [],
             [],
             [],
-            0.0
+            0.0,
+            []
+            # calculate_tf_idf.tf_idf(find_between(document_str, ".W", ".X").strip())
         )
         for line in doc.references_text.strip().splitlines():
             doc.references_list.append(convert_list_string_to_int(re.split('\s+', line)))

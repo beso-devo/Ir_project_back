@@ -11,10 +11,11 @@ class Document:
     lemmas = []
     filtered_list = []
     tf_idf = 0.0
+    tf_idf_for_whole_document = []
 
     def __init__(self, document_id, title, author, words, references_text, references_list, reference_rank,tokens, stemmed_list,
                  lemmas, filtered_list,
-                 tf_idf):
+                 tf_idf, tf_idf_for_whole_document):
         self.document_id = document_id
         self.title = title
         self.author = author
@@ -27,6 +28,7 @@ class Document:
         self.lemmas = lemmas
         self.filtered_list = filtered_list
         self.tf_idf = tf_idf
+        self.tf_idf_for_whole_document = tf_idf_for_whole_document
 
     def set_tokens(self, tokens):
         self.tokens = tokens
