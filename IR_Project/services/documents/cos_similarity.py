@@ -1,5 +1,8 @@
 import nltk, string
 from sklearn.feature_extraction.text import TfidfVectorizer
+from numpy import dot
+from numpy.linalg import norm
+from scipy import spatial
 
 stemmer = nltk.stem.porter.PorterStemmer()
 remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
@@ -20,6 +23,15 @@ def cosine_sim(text1, text2):
     tfidf = vectorizer.fit_transform([text1, text2])
     # print("tfidf = ", tfidf)
     return (tfidf * tfidf.T).A[0, 1]
+
+
+def enhanced_cosine_sim(a, b):
+    print("a = ", a)
+    print("b = ", b)
+    dataSetI = [3, 45, 7, 2]
+    dataSetII = [2, 54, 13, 15]
+    result = 1 - spatial.distance.cosine(b, b)
+    return result
 
 
 print(cosine_sim("How to install python on widows", "python on windows ois very useful"))

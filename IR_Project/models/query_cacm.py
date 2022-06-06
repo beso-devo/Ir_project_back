@@ -1,19 +1,17 @@
-class Query:
+class QueryCaCm:
     query_id = -1
     query_text = ""
     query_re_call = -1.0
     query_precision = -1.0
-    tf_idf_for_whole_query = []
 
     documents_relevant = []
 
-    def __init__(self, query_id, query_text, documents_relevant, query_re_call, query_precision, tf_idf_for_whole_query):
+    def __init__(self, query_id, query_text, documents_relevant, query_re_call, query_precision):
         self.query_id = query_id
         self.query_text = query_text
         self.documents_relevant = documents_relevant
         self.query_re_call = query_re_call
         self.query_precision = query_precision
-        self.tf_idf_for_whole_query = tf_idf_for_whole_query
 
     def to_json(self):
         return {

@@ -4,6 +4,7 @@ import IR_Project.services.documents.cos_similarity as cos_sim
 import IR_Project.API.variables.lists as lists
 import IR_Project.models.document_reference as document_reference
 import IR_Project.utils.recall_precision as func_stuff
+import IR_Project.models.query_cacm as query_ca_cm
 
 app = Blueprint('core', __name__)
 
@@ -163,7 +164,8 @@ def get_recall_precision_ci():
     #     query.documents_relevant = list_ids
     #     # print("query_id =", query.query_id, " ", "lists_ids = ", list_ids)
 
-    for i in range(35):
+    for i in range(55):
+        print("--------> i = ", i)
         results = get_first_ten_ci_docs(lists.queries_ci[i])
         retrieved_docs = count_relevant_documents(results, lists.queries_ci[i])
         lists.queries_ci[i].query_precision = func_stuff.precision(retrieved_docs, 500)
@@ -180,8 +182,8 @@ def get_recall_precision_ci():
     return jsonify({
         "queries": result,
         "count": len(result),
-        "MAP": get_mean_average_precision(result),
-        "MRR": get_mean_reciprocal_rank(result),
+        "MAP": get_mean_average_precision_ci(result),
+        "MRR": get_mean_reciprocal_rank_ci(result),
     })
 
 
@@ -190,6 +192,10 @@ def get_first_ten_ci_docs(query):
     # query.display()
     for i in range(1459):
         cos_sim_value = 0.0
+        # cos_sim_value = cos_sim.enhanced_cosine_sim(
+        #     lists.documents_ci[i].tf_idf_for_whole_document, query.tf_idf_for_whole_query
+        # )
+
         cos_sim_value = cos_sim.cosine_sim(
             lists.documents_ci[i].words, query.query_text
         )
@@ -198,6 +204,54 @@ def get_first_ten_ci_docs(query):
                 cos_sim_value
             )
             docs.append(lists.documents_ci[i])
+
+    if len(docs) > 500:
+        return docs[0:500]
+    return docs
+
+
+@app.route('/get_recall_precision_ca_cm', methods=['GET'])
+def get_recall_precision_ca_cm():
+    for i in range(63):
+        results = get_first_ten_ca_cm_docs(lists.queries_ca_cm[i])
+        retrieved_docs = count_relevant_documents(results, lists.queries_ca_cm[i])
+        lists.queries_ca_cm[i].query_precision = func_stuff.precision(retrieved_docs, 500)
+        if retrieved_docs == 0 or len(lists.queries_ca_cm[i].documents_relevant) == 0:
+            lists.queries_ca_cm[i].query_re_call = 0.0
+        else:
+            lists.queries_ca_cm[i].query_re_call = func_stuff.recall(retrieved_docs,
+                                                                     len(lists.queries_ca_cm[i].documents_relevant))
+        print("result = ", len(results), "retrieved_docs = ", retrieved_docs, "lists.queries_ca_cm[i] = ",
+              query_ca_cm.QueryCaCm.display(lists.queries_ca_cm[i]),
+              "results_ids = ", get_ids(results))
+        print("____________________________________________________")
+
+    result = []
+    for query in lists.queries_ca_cm:
+        result.append(query.to_json())
+
+    return jsonify({
+        "queries": result,
+        "count": len(result),
+        "MAP": get_mean_average_precision_ca_cm(result),
+        "MRR": get_mean_reciprocal_rank_ca_cm(result),
+    })
+
+
+def get_first_ten_ca_cm_docs(query):
+    docs = []
+    # query.display()
+    for i in range(3203):
+        cos_sim_value = 0.0
+        if lists.documents_ca_cm[i].words != "" and query.query_text != "":
+            cos_sim_value = cos_sim.cosine_sim(
+                lists.documents_ca_cm[i].words, query.query_text
+            )
+        if cos_sim_value != 0.0:
+            lists.documents_ca_cm[i].set_tf_idf(
+                cos_sim_value
+            )
+            docs.append(lists.documents_ca_cm[i])
 
     if len(docs) > 500:
         return docs[0:500]
@@ -219,21 +273,56 @@ def check_document_in_relevant_list(document_relevant_id, results):
     return False
 
 
-def get_mean_average_precision(result):
+def get_mean_average_precision_ci(result):
     total = 0.0
     counter = 0
     for i in range(56):
         if lists.queries_ci[i].query_precision != -1.0:
             total = total + lists.queries_ci[i].query_precision
             counter = counter + 1
+    if total == 0 or counter == 0:
+        return 0.0
     return total / counter
 
 
-def get_mean_reciprocal_rank(result):
+def get_mean_reciprocal_rank_ci(result):
     total = 0.0
     counter = 0
     for i in range(56):
         if lists.queries_ci[i].query_re_call != -1.0:
             total = total + lists.queries_ci[i].query_re_call
             counter = counter + 1
+    if total == 0 or counter == 0:
+        return 0.0
     return total / counter
+
+
+def get_mean_average_precision_ca_cm(result):
+    total = 0.0
+    counter = 0
+    for i in range(56):
+        if lists.queries_ca_cm[i].query_precision != -1.0:
+            total = total + lists.queries_ca_cm[i].query_precision
+            counter = counter + 1
+    if total == 0 or counter == 0:
+        return 0.0
+    return total / counter
+
+
+def get_mean_reciprocal_rank_ca_cm(result):
+    total = 0.0
+    counter = 0
+    for i in range(56):
+        if lists.queries_ca_cm[i].query_re_call != -1.0:
+            total = total + lists.queries_ca_cm[i].query_re_call
+            counter = counter + 1
+    if total == 0 or counter == 0:
+        return 0.0
+    return total / counter
+
+
+def get_ids(results):
+    ids = []
+    for i in results:
+        ids.append(i.document_id)
+    return ids

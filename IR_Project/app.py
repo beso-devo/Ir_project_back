@@ -23,4 +23,4 @@ if __name__ == "__main__":
     # lists.documents_ci = ci_document.parse_ci_all()
     # lists.documents_ca_cm = ca_cm_document.parse_ca_cm_all()
     # lists.queries_ci = ci_query.parse_ci_all()
-    main_app.run(debug=True, host='192.168.1.6')
+    main_app.run(debug=True, host='192.168.1.7')
